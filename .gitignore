@@ -1,0 +1,6 @@
+# Utilitaire temporaire de génération de hash
+generer_hash.php
+
+# Logs et fichiers système
+*.log
+Thumbs.db

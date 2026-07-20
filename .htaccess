@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Doit venir en premier : Apache strippe le header Authorization,
+# on le réinjecte dans une variable d'environnement lisible par PHP.
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Tout ce qui n'est pas un fichier ou dossier réel part vers index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
