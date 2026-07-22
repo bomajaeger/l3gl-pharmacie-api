@@ -10,6 +10,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/config/Database.php';
 require_once __DIR__ . '/helpers/Response.php';
 require_once __DIR__ . '/helpers/Request.php';
+require_once __DIR__ . '/helpers/Logger.php';
 require_once __DIR__ . '/models/Utilisateur.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/controllers/AuthController.php';
@@ -195,8 +196,11 @@ try {
     }
 
 } catch (PDOException $e) {
-    Response::error('Erreur base de données : ' . $e->getMessage(), 500);
+    // Le détail SQL part dans le log, jamais vers le client.
+    Logger::erreur('Erreur base de données', $e->getMessage());
+    Response::error('Une erreur interne est survenue. Réessayez plus tard.', 500);
 
 } catch (Throwable $e) {
-    Response::error('Erreur serveur : ' . $e->getMessage(), 500);
+    Logger::erreur('Erreur serveur', $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+    Response::error('Une erreur interne est survenue. Réessayez plus tard.', 500);
 }
